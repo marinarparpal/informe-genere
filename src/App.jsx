@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 // Importem el logo (assumim que el fitxer es diu logo.png i està a la carpeta assets)
-import logoEntitat from './assets/logo.png';
+import logoEntitat from './Assets/logo.png';
 
 const App = () => {
   const [stats, setStats] = useState({
