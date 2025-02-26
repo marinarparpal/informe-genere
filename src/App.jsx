@@ -321,9 +321,9 @@ const App = () => {
         }}
       >
         <img 
-          src={logoEntitat} 
+          src={`${logoEntitat}?v=${Date.now()}`} 
           alt="Logo de l'entitat" 
-          style={{maxHeight: "60px !important", maxWidth: "200px !important"}} 
+          style={{ maxHeight: "60px", maxWidth: "200px" }} 
         />
       </div>
     </div>
