@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
-// Importem el logo (assumim que el fitxer es diu logo.png i està a la carpeta assets)
+// Importem el logo (assumim que el fitxer es diu logo.png i està a la carpeta Assets)
 import logoEntitat from './Assets/logo.png';
 
 const App = () => {
@@ -24,6 +24,25 @@ const App = () => {
     altres: 0,
   });
 
+  // Per detectar la mida de la pantalla
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    // Funció per actualitzar l'estat segons la mida de la pantalla
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    // Afegim listener per quan canvia la mida de la finestra
+    window.addEventListener('resize', handleResize);
+
+    // Netegem listener quan es desmunta el component
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  // Reduïm la freqüència d'actualització del temporitzador
   useEffect(() => {
     let interval;
     if (timerActive.homes || timerActive.altres) {
@@ -32,17 +51,31 @@ const App = () => {
 
         if (timerActive.homes) {
           const segonsHomes = Math.floor((now - startTime.homes) / 1000);
-          setCurrentTime((prev) => ({ ...prev, homes: segonsHomes }));
+          setCurrentTime((prev) => {
+            // Només actualitzem si canvia el valor
+            if (prev.homes !== segonsHomes) {
+              return { ...prev, homes: segonsHomes };
+            }
+            return prev;
+          });
         }
 
         if (timerActive.altres) {
           const segonsAltres = Math.floor((now - startTime.altres) / 1000);
-          setCurrentTime((prev) => ({ ...prev, altres: segonsAltres }));
+          setCurrentTime((prev) => {
+            // Només actualitzem si canvia el valor
+            if (prev.altres !== segonsAltres) {
+              return { ...prev, altres: segonsAltres };
+            }
+            return prev;
+          });
         }
-      }, 1000);
+      }, 1000); // Actualitzem cada segon, però només si cal
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [timerActive, startTime]);
 
   const formatTime = (segons) => {
@@ -101,14 +134,15 @@ const App = () => {
     );
   };
 
+  // Generem dades del gràfic però només amb valors > 0 per evitar problemes
   const pieData = [
-    { name: "Homes", value: stats.homes.intervencions },
-    { name: "Dones/NB", value: stats.altres.intervencions },
+    { name: "Homes", value: stats.homes.intervencions || 0.01 },
+    { name: "Dones/NB", value: stats.altres.intervencions || 0.01 },
   ];
 
   const timeData = [
-    { name: "Homes", value: getTotalTime("homes") },
-    { name: "Dones/NB", value: getTotalTime("altres") },
+    { name: "Homes", value: getTotalTime("homes") || 0.01 },
+    { name: "Dones/NB", value: getTotalTime("altres") || 0.01 },
   ];
 
   const COLORS = ["#008A45", "#B72446"];
@@ -116,7 +150,7 @@ const App = () => {
   return (
     <div
       style={{
-        maxWidth: "800px",
+        maxWidth: isDesktop ? "1200px" : "800px",
         margin: "0 auto",
         padding: "20px",
         paddingBottom: "20px",
@@ -131,14 +165,21 @@ const App = () => {
         Informe de gènere
       </h1>
 
-      {/* Controls */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+      {/* Controls - Responsive Layout */}
+      <div style={{ 
+        display: "flex", 
+        flexDirection: isDesktop ? "row" : "column", 
+        gap: "20px",
+        justifyContent: "space-between",
+      }}>
         {/* Secció Homes */}
         <div
           style={{
             border: "1px solid #ccc",
             borderRadius: "8px",
             padding: "20px",
+            flex: isDesktop ? "1" : "none",
+            minWidth: isDesktop ? "250px" : "auto",
           }}
         >
           <h3
@@ -194,6 +235,8 @@ const App = () => {
             border: "1px solid #ccc",
             borderRadius: "8px",
             padding: "20px",
+            flex: isDesktop ? "1" : "none",
+            minWidth: isDesktop ? "250px" : "auto",
           }}
         >
           <h3
@@ -244,67 +287,84 @@ const App = () => {
         </div>
       </div>
 
-      {/* Gràfics */}
+      {/* Gràfics - Responsive Layout */}
       <div
         style={{
           display: "flex",
-          flexDirection: "column",
-          gap: "60px",
+          flexDirection: isDesktop ? "row" : "column",
+          gap: isDesktop ? "30px" : "60px",
           marginTop: "20px",
+          justifyContent: "space-between",
         }}
       >
-        <div style={{ height: "300px" }}>
+        <div style={{ 
+          height: "300px", 
+          flex: isDesktop ? "1" : "none",
+          minWidth: isDesktop ? "250px" : "auto", 
+        }}>
           <h3 style={{ textAlign: "center", marginBottom: "5px" }}>
             Distribució d'intervencions
           </h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={pieData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {pieData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Legend height={50} />
-            </PieChart>
-          </ResponsiveContainer>
+          <div style={{ width: "100%", height: "100%" }}>
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={pieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  animationDuration={300}
+                  animationBegin={0}
+                >
+                  {pieData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend height={50} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div style={{ height: "300px" }}>
+        <div style={{ 
+          height: "300px", 
+          flex: isDesktop ? "1" : "none",
+          minWidth: isDesktop ? "250px" : "auto", 
+        }}>
           <h3 style={{ textAlign: "center", marginBottom: "5px" }}>
             Distribució de temps
           </h3>
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={timeData}
-                cx="50%"
-                cy="50%"
-                innerRadius={60}
-                outerRadius={80}
-                paddingAngle={5}
-                dataKey="value"
-              >
-                {timeData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
-              </Pie>
-              <Legend height={50} />
-            </PieChart>
-          </ResponsiveContainer>
+          <div style={{ width: "100%", height: "100%" }}>
+            <ResponsiveContainer>
+              <PieChart>
+                <Pie
+                  data={timeData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                  animationDuration={300}
+                  animationBegin={0}
+                >
+                  {timeData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Legend height={50} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
       
@@ -314,16 +374,21 @@ const App = () => {
           textAlign: "center",
           marginTop: "40px",
           paddingTop: "20px",
+          borderTop: "1px solid #ddd",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "10px"
         }}
       >
-       <img 
+        <img 
           src={logoEntitat} 
           alt="Logo de l'entitat" 
-          style={{ maxHeight: "60px", maxWidth: "200px" }} 
+          style={{ 
+            height: "45px", 
+            width: "auto", 
+            maxWidth: "150px" 
+          }} 
         />
       </div>
     </div>
