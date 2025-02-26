@@ -56,23 +56,9 @@ const App = () => {
     return timeString;
   };
 
-  const handleIntervencio = (genere) => {
-    setStats((prev) => ({
-      ...prev,
-      [genere]: {
-        ...prev[genere],
-        intervencions: prev[genere].intervencions + 1,
-      },
-    }));
-  };
-
-  const toggleTimer = (genere) => {
-    if (!timerActive[genere]) {
-      setStartTime((prev) => ({
-        ...prev,
-        [genere]: Date.now(),
-      }));
-    } else {
+  const handleIntervencioToggle = (genere) => {
+    // Si el temporitzador està actiu, l'aturem i guardem el temps
+    if (timerActive[genere]) {
       setStats((prev) => ({
         ...prev,
         [genere]: {
@@ -84,7 +70,23 @@ const App = () => {
         ...prev,
         [genere]: 0,
       }));
+    } else {
+      // Si el temporitzador no està actiu, incrementem les intervencions
+      setStats((prev) => ({
+        ...prev,
+        [genere]: {
+          ...prev[genere],
+          intervencions: prev[genere].intervencions + 1,
+        },
+      }));
+      // Iniciem el temporitzador
+      setStartTime((prev) => ({
+        ...prev,
+        [genere]: Date.now(),
+      }));
     }
+    
+    // Canviem l'estat del temporitzador
     setTimerActive((prev) => ({
       ...prev,
       [genere]: !prev[genere],
@@ -154,22 +156,7 @@ const App = () => {
             }}
           >
             <button
-              onClick={() => handleIntervencio("homes")}
-              style={{
-                padding: "15px",
-                backgroundColor: "#008A45",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "16px",
-                height: "50px",
-              }}
-            >
-              Intervenció ({stats.homes.intervencions})
-            </button>
-            <button
-              onClick={() => toggleTimer("homes")}
+              onClick={() => handleIntervencioToggle("homes")}
               style={{
                 padding: "15px",
                 backgroundColor: timerActive.homes ? "#B72446" : "#008A45",
@@ -178,10 +165,12 @@ const App = () => {
                 borderRadius: "4px",
                 cursor: "pointer",
                 fontSize: "16px",
-                height: "50px",
+                height: "60px",
               }}
             >
-              {timerActive.homes ? "Aturar" : "Iniciar"}
+              {timerActive.homes 
+                ? "Finalitzar intervenció" 
+                : "Intervenció" + (stats.homes.intervencions > 0 ? ` (${stats.homes.intervencions})` : "")}
             </button>
           </div>
           <div
@@ -222,22 +211,7 @@ const App = () => {
             }}
           >
             <button
-              onClick={() => handleIntervencio("altres")}
-              style={{
-                padding: "15px",
-                backgroundColor: "#008A45",
-                color: "white",
-                border: "none",
-                borderRadius: "4px",
-                cursor: "pointer",
-                fontSize: "16px",
-                height: "50px",
-              }}
-            >
-              Intervenció ({stats.altres.intervencions})
-            </button>
-            <button
-              onClick={() => toggleTimer("altres")}
+              onClick={() => handleIntervencioToggle("altres")}
               style={{
                 padding: "15px",
                 backgroundColor: timerActive.altres ? "#B72446" : "#008A45",
@@ -246,10 +220,12 @@ const App = () => {
                 borderRadius: "4px",
                 cursor: "pointer",
                 fontSize: "16px",
-                height: "50px",
+                height: "60px",
               }}
             >
-              {timerActive.altres ? "Aturar" : "Iniciar"}
+              {timerActive.altres 
+                ? "Finalitzar intervenció" 
+                : "Intervenció" + (stats.altres.intervencions > 0 ? ` (${stats.altres.intervencions})` : "")}
             </button>
           </div>
           <div
@@ -264,6 +240,16 @@ const App = () => {
             Temps total: {formatTime(getTotalTime("altres"))}
           </div>
         </div>
+      </div>
+
+      {/* Espai per al logo */}
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "20px",
+        }}
+      >
+        {/* Aquí és on anirà el logo */}
       </div>
 
       {/* Gràfics */}
