@@ -325,7 +325,6 @@ const App = () => {
           alt="Logo de l'entitat" 
           style={{ maxHeight: "50px", maxWidth: "150px" }} 
         />
-        </p>
       </div>
     </div>
   );
