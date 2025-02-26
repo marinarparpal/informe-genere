@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
+// Importem el logo (assumim que el fitxer es diu logo.png i està a la carpeta assets)
+import logoEntitat from './assets/logo.png';
 
 const App = () => {
   const [stats, setStats] = useState({
@@ -117,7 +119,7 @@ const App = () => {
         maxWidth: "800px",
         margin: "0 auto",
         padding: "20px",
-        paddingBottom: "60px",
+        paddingBottom: "20px",
         display: "flex",
         flexDirection: "column",
         gap: "20px",
@@ -242,16 +244,6 @@ const App = () => {
         </div>
       </div>
 
-      {/* Espai per al logo */}
-      <div
-        style={{
-          textAlign: "center",
-          marginTop: "20px",
-        }}
-      >
-        {/* Aquí és on anirà el logo */}
-      </div>
-
       {/* Gràfics */}
       <div
         style={{
@@ -314,6 +306,29 @@ const App = () => {
             </PieChart>
           </ResponsiveContainer>
         </div>
+      </div>
+      
+      {/* Peu de pàgina amb logo */}
+      <div
+        style={{
+          textAlign: "center",
+          marginTop: "40px",
+          paddingTop: "20px",
+          borderTop: "1px solid #ddd",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "10px"
+        }}
+      >
+        <img 
+          src={logoEntitat} 
+          alt="Logo de l'entitat" 
+          style={{ maxHeight: "40px", maxWidth: "150px" }} 
+        />
+        <p style={{ fontSize: "12px", color: "#666", margin: "5px 0" }}>
+          © {new Date().getFullYear()} La teva entitat
+        </p>
       </div>
     </div>
   );
