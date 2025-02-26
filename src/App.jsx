@@ -134,15 +134,15 @@ const App = () => {
     );
   };
 
-  // Generem dades del gràfic però només amb valors > 0 per evitar problemes
+  // Generem dades del gràfic amb valors inicials de 0 (si no hi ha intervencions)
   const pieData = [
-    { name: "Homes", value: stats.homes.intervencions || 0.01 },
-    { name: "Dones/NB", value: stats.altres.intervencions || 0.01 },
+    { name: "Homes", value: stats.homes.intervencions || 0 },
+    { name: "Dones/NB", value: stats.altres.intervencions || 0 },
   ];
 
   const timeData = [
-    { name: "Homes", value: getTotalTime("homes") || 0.01 },
-    { name: "Dones/NB", value: getTotalTime("altres") || 0.01 },
+    { name: "Homes", value: getTotalTime("homes") || 0 },
+    { name: "Dones/NB", value: getTotalTime("altres") || 0 },
   ];
 
   const COLORS = ["#008A45", "#B72446"];
@@ -318,6 +318,7 @@ const App = () => {
                   dataKey="value"
                   animationDuration={300}
                   animationBegin={0}
+                  minAngle={0}
                 >
                   {pieData.map((entry, index) => (
                     <Cell
@@ -353,6 +354,7 @@ const App = () => {
                   dataKey="value"
                   animationDuration={300}
                   animationBegin={0}
+                  minAngle={0}
                 >
                   {timeData.map((entry, index) => (
                     <Cell
@@ -374,7 +376,8 @@ const App = () => {
           textAlign: "center",
           marginTop: "40px",
           paddingTop: "20px",
-            display: "flex",
+          borderTop: "1px solid #ddd",
+          display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "10px"
@@ -384,9 +387,9 @@ const App = () => {
           src={logoEntitat} 
           alt="Logo de l'entitat" 
           style={{ 
-            height: "60px", 
+            height: "45px", 
             width: "auto", 
-            maxWidth: "200px" 
+            maxWidth: "150px" 
           }} 
         />
       </div>
