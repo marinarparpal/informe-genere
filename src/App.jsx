@@ -323,7 +323,7 @@ const App = () => {
         <img 
           src={logoEntitat} 
           alt="Logo de l'entitat" 
-          style={{ maxHeight: "50 px", maxWidth: "180 px" }} 
+          style={{ maxHeight: "40 px", maxWidth: "150 px" }} 
         />
       </div>
     </div>
