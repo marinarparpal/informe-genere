@@ -320,10 +320,10 @@ const App = () => {
           gap: "10px"
         }}
       >
-        <img 
-          src={`${logoEntitat}?v=${Date.now()}`} 
+       <img 
+          src={logoEntitat} 
           alt="Logo de l'entitat" 
-          style={{ maxHeight: "60px", maxWidth: "200px" }} 
+          style={{ maxHeight: "50px", maxWidth: "180px" }} 
         />
       </div>
     </div>
