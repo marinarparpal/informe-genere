@@ -314,7 +314,6 @@ const App = () => {
           textAlign: "center",
           marginTop: "40px",
           paddingTop: "20px",
-          borderTop: "1px solid #ddd",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
@@ -324,10 +323,8 @@ const App = () => {
         <img 
           src={logoEntitat} 
           alt="Logo de l'entitat" 
-          style={{ maxHeight: "40px", maxWidth: "150px" }} 
+          style={{ maxHeight: "50px", maxWidth: "150px" }} 
         />
-        <p style={{ fontSize: "12px", color: "#666", margin: "5px 0" }}>
-          © {new Date().getFullYear()} La teva entitat
         </p>
       </div>
     </div>
