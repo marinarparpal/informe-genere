@@ -376,8 +376,7 @@ const App = () => {
           textAlign: "center",
           marginTop: "40px",
           paddingTop: "20px",
-          borderTop: "1px solid #ddd",
-          display: "flex",
+            display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: "10px"
@@ -387,9 +386,9 @@ const App = () => {
           src={logoEntitat} 
           alt="Logo de l'entitat" 
           style={{ 
-            height: "45px", 
+            height: "60px", 
             width: "auto", 
-            maxWidth: "150px" 
+            maxWidth: "200px" 
           }} 
         />
       </div>
